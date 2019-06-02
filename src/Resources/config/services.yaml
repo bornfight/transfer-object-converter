@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Bornfight\TransferObjectConverter\:
+    resource: '../../../src/*'
+    exclude: '../../../src/{DependencyInjection,Transformers,Resources,Exceptions,TransferObjectConverterBundle.php}'
+
+  Bornfight\TransferObjectConverter\TransferObjectConverter:
+    class: Bornfight\TransferObjectConverter\TransferObjectConverter
+    tags:
+      - { name: request.param_converter, priority: -2, converter: bornfight.transfer_object_converter.converter }

@@ -1,0 +1,11 @@
+parameters:
+	featureToggles:
+		deadCatchesRule: true
+		missingReturnRule: true
+		noopRule: true
+		unreachableStatement: true
+		yieldRules: true
+	paths:
+		- src/
+includes:
+	- vendor/phpstan/phpstan-strict-rules/rules.neon

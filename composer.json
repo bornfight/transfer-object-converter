@@ -1,0 +1,133 @@
+{
+	"name": "bornfight/transfer-object-converter",
+	"version": "1.0.0",
+	"type": "symfony-bundle",
+	"license": "MIT",
+	"description": "Populate given object from POST request - both from $_POST and $_FILES",
+	"keywords": [
+		"symfony",
+		"request",
+		"converter",
+		"hydrator"
+	],
+	"authors": [
+		{
+			"name": "Bruno Zorić",
+			"email": "bruno.zoric@bornfight.com"
+		}
+	],
+	"require": {
+		"php": "^7.2",
+		"sensio/framework-extra-bundle": "^5.3",
+		"symfony/property-access": "^4.2",
+		"symfony/property-info": "^4.2",
+		"symfony/validator": "^4.2"
+	},
+	"require-dev": {
+		"codeception/codeception": "^2.5",
+		"codeception/verify": "^1.0",
+		"friendsofphp/php-cs-fixer": "^2.13",
+		"phpmd/phpmd": "@stable",
+		"phpstan/phpstan-shim": "^0.11.6",
+		"phpstan/phpstan-strict-rules": "^0.11.0",
+		"sebastian/phpcpd": "^4"
+	},
+	"scripts": {
+		"phpstan": [
+			"phpstan analyse --level=7 --memory-limit=512M src/ || true"
+		],
+		"phpstan-tests": [
+			"phpstan analyse --level=7 --memory-limit=512M tests/unit/ || true"
+		],
+		"ci:phpstan": [
+			"phpstan analyse --level=7 --no-progress --no-ansi --error-format=checkstyle src/ > reports/phpstan-checkstyle.xml || true"
+		],
+		"ci:phpstan-tests": [
+			"phpstan analyse --level=7 --no-progress --no-ansi --error-format=checkstyle tests/unit/ > reports/phpstan-checkstyle-tests.xml || true"
+		],
+		"phpcpd": [
+			"phpcpd src/ || true"
+		],
+		"phpcpd-tests": [
+			"phpcpd tests/unit/ || true"
+		],
+		"ci:phpcpd": [
+			"phpcpd src/ --log-pmd='reports/phpcpd.xml' || true"
+		],
+		"ci:phpcpd-tests": [
+			"phpcpd tests/unit/ --log-pmd='reports/phpcpd-tests.xml' || true"
+		],
+		"phpmd": [
+			"phpmd src/ text phpmd.xml || true"
+		],
+		"phpmd-tests": [
+			"phpmd tests/unit/ text phpmd.xml || true"
+		],
+		"ci:phpmd": [
+			"phpmd src/ xml phpmd.xml --reportfile reports/phpmd-pmd.xml || true"
+		],
+		"ci:phpmd-tests": [
+			"phpmd tests/unit/ xml phpmd.xml --reportfile reports/phpmd-pmd-tests.xml || true"
+		],
+		"php-cs-fixer": [
+			"php-cs-fixer fix src/ --dry-run --diff || true"
+		],
+		"php-cs-fixer-tests": [
+			"php-cs-fixer fix tests/unit/ --dry-run --diff || true"
+		],
+		"ci:php-cs-fixer": [
+			"php-cs-fixer fix src/ --dry-run --diff --format checkstyle > reports/php-cs-fixer-checkstyle.xml || true"
+		],
+		"ci:php-cs-fixer-tests": [
+			"php-cs-fixer fix tests/unit/ --dry-run --diff --format checkstyle > reports/php-cs-fixer-checkstyle-tests.xml || true"
+		],
+		"analysis": [
+			"@phpcpd",
+			"@phpmd",
+			"@php-cs-fixer",
+			"@phpstan"
+		],
+		"analysis:tests": [
+			"@phpcpd-tests",
+			"@phpmd-tests",
+			"@php-cs-fixer-tests",
+			"@phpstan-tests"
+		],
+		"ci:analysis": [
+			"mkdir -p reports",
+			"@ci:phpcpd",
+			"@ci:phpmd",
+			"@ci:php-cs-fixer",
+			"@ci:phpstan"
+		],
+		"ci:analysis:tests": [
+			"mkdir -p reports",
+			"@ci:phpcpd-tests",
+			"@ci:phpmd-tests",
+			"@ci:php-cs-fixer-tests",
+			"@ci:phpstan-tests"
+		],
+		"test": [
+			"codecept run"
+		],
+		"ci:test": [
+			"codecept run --xml --html --coverage-html --coverage-xml"
+		]
+	},
+	"autoload": {
+		"psr-4": {
+			"Bornfight\\TransferObjectConverter\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Bornfight\\TransferObjectConverter\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"preferred-install": {
+			"*": "dist"
+		},
+		"sort-packages": true
+	}
+}
