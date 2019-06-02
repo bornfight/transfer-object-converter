@@ -14,8 +14,10 @@ use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 
 class TransferObjectConverterTest extends Unit
 {
@@ -55,7 +57,10 @@ class TransferObjectConverterTest extends Unit
 
     public function testItShouldNotSupportConversion(): void
     {
-        $configuration = $this->getParamConverterInvalidConfiguration();
+        $configuration = $this->getParamConverterConfiguration([
+            'name' => 'Not supported name',
+            'class' => '',
+        ]);
 
         $result = $this->transferObjectConverter->supports($configuration);
 
@@ -92,6 +97,27 @@ class TransferObjectConverterTest extends Unit
         verify($result)->equals($expected);
     }
 
+    public function testItShouldThrowExceptionWhenTargetClassIsNotDefined(): void
+    {
+        $configuration = $this->getParamConverterConfiguration([
+            'class' => '',
+        ]);
+
+        $request = $this->getRequest();
+
+        $result = null;
+        $resultMessage = null;
+        try {
+            $this->transferObjectConverter->apply($request, $configuration);
+        } catch (Throwable $ex) {
+            $result = $ex;
+            $resultMessage = $ex->getMessage();
+        }
+
+        verify($result)->isInstanceOf(NotAcceptableHttpException::class);
+        verify($resultMessage)->equals(sprintf('It seems that argument (%s) which you want to populate has no class defined. This can happen if you set different argument name in @ParamConverter than it is named in method argument.', TargetObjectTestClass::class));
+    }
+
     private function getObjectHydrator(): ObjectHydrator
     {
         $valueTransformerAdapter = new ValueTransformerAdapter();
@@ -116,20 +142,13 @@ class TransferObjectConverterTest extends Unit
         return $validator;
     }
 
-    private function getParamConverterConfiguration(): ParamConverter
+    private function getParamConverterConfiguration(array $configuration = []): ParamConverter
     {
-        return new ParamConverter([
+        return new ParamConverter(array_merge([
             'name' => TargetObjectTestClass::class,
             'converter' => TransferObjectConverter::NAME,
             'class' => TargetObjectTestClass::class,
-        ]);
-    }
-
-    private function getParamConverterInvalidConfiguration(): ParamConverter
-    {
-        return new ParamConverter([
-            'name' => 'Not supported name',
-        ]);
+        ], $configuration));
     }
 
     private function getRequest(): Request
