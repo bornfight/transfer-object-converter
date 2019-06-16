@@ -1,16 +1,20 @@
 # Transfer Object Converter
 
-## Installation
+### What is this package?
+Package helps you get data sent via HTTP POST. If you want to get request body, there are other converters to get it.
+It populates the variable which you target it to ( must be some class with properties for it to work ).
+
+### How to use the package?
+
+[Check it here](USAGE.md)
+
+### How to install the package?
 
 ````
 $ composer require bornfight/transfer-object-converter
 ````
 
-#### How to use?
-
-[Check it here](USAGE.md)
-
-## Tests & analysis
+### Tests & analysis
 ##### Running tests
 ````
 $ composer test
