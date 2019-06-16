@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Bornfight\TransferObjectConverter;
 
 use Bornfight\TransferObjectConverter\Exceptions\PropertiesNotExtractedException;
+use Bornfight\TransferObjectConverter\Factory\PropertyAccessorFactoryInterface;
+use Bornfight\TransferObjectConverter\Factory\PropertyInfoExtractorFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -32,13 +30,12 @@ class ObjectHydrator
 
     public function __construct(
         ValueTransformerAdapter $transformerAdapter,
-        PropertyAccessorInterface $propertyAccessor = null,
-        PropertyInfoExtractorInterface $propertyInfoExtractor = null
+        PropertyAccessorFactoryInterface $propertyAccessorFactory,
+        PropertyInfoExtractorFactoryInterface $propertyInfoExtractorFactory
     ) {
         $this->transformerAdapter = $transformerAdapter;
-        // TODO need to introduce factory for each of these
-        $this->propertyAccessor = $propertyAccessor ?? $this->createPropertyAccessor();
-        $this->propertyInfoExtractor = $propertyInfoExtractor ?? $this->createPropertyInfoExtractor();
+        $this->propertyAccessor = $propertyAccessorFactory->createPropertyAccessor();
+        $this->propertyInfoExtractor = $propertyInfoExtractorFactory->createPropertyInfoExtractor();
     }
 
     public function hydrate(Request $request, string $className): object
@@ -83,36 +80,5 @@ class ObjectHydrator
         $value = $request->request->get($property);
 
         return $this->transformerAdapter->transform($property, $value, $type);
-    }
-
-    private function createPropertyInfoExtractor(): PropertyInfoExtractorInterface
-    {
-        $reflectionExtractor = new ReflectionExtractor();
-        $phpDocExtractor = new PhpDocExtractor();
-
-        return new PropertyInfoExtractor(
-            [
-                $reflectionExtractor,
-            ],
-            [
-                $reflectionExtractor,
-                $phpDocExtractor,
-            ],
-            [
-                $phpDocExtractor,
-            ],
-            [
-                $reflectionExtractor,
-            ],
-            [
-                $reflectionExtractor,
-            ]
-        );
-    }
-
-    private function createPropertyAccessor(): PropertyAccessorInterface
-    {
-        return PropertyAccess::createPropertyAccessorBuilder()
-            ->getPropertyAccessor();
     }
 }
