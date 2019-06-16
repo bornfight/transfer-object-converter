@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Bornfight\TransferObjectConverter\Tests\unit;
 
 use Bornfight\TransferObjectConverter\Exceptions\PropertiesNotExtractedException;
+use Bornfight\TransferObjectConverter\Factory\PropertyAccessorFactory;
+use Bornfight\TransferObjectConverter\Factory\PropertyInfoExtractorFactory;
 use Bornfight\TransferObjectConverter\ObjectHydrator;
 use Bornfight\TransferObjectConverter\Tests\_support\TargetObjectTestClass;
 use Bornfight\TransferObjectConverter\ValueTransformerAdapter;
@@ -28,7 +30,11 @@ class ObjectHydratorTest extends Unit
      */
     protected function _before(): void
     {
-        $this->objectHydrator = new ObjectHydrator(new ValueTransformerAdapter());
+        $this->objectHydrator = new ObjectHydrator(
+            new ValueTransformerAdapter(),
+            $this->createPropertyAccessorFactory(),
+            $this->createPropertyInfoExtractorFactory()
+        );
     }
 
     public function testItShouldHydrateObject(): void
@@ -135,5 +141,15 @@ class ObjectHydratorTest extends Unit
     private function getFile(): UploadedFile
     {
         return new UploadedFile(self::FILE_PATH, self::FILE_ORIGINAL_NAME);
+    }
+
+    private function createPropertyAccessorFactory(): PropertyAccessorFactory
+    {
+        return new PropertyAccessorFactory();
+    }
+
+    private function createPropertyInfoExtractorFactory(): PropertyInfoExtractorFactory
+    {
+        return new PropertyInfoExtractorFactory();
     }
 }
