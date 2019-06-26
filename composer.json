@@ -17,7 +17,7 @@
 		}
 	],
 	"require": {
-		"php": "^7.2",
+		"php": ">=7.2",
 		"sensio/framework-extra-bundle": "^5.3",
 		"symfony/property-access": "^4.2",
 		"symfony/property-info": "^4.2",
