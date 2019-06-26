@@ -45,7 +45,7 @@ class ObjectHydrator
             throw new PropertiesNotExtractedException();
         }
 
-        $object = new $className();
+        $targetObject = new $className();
 
         foreach ($properties as $property) {
             $type = $this->getPropertyType($className, $property);
@@ -53,10 +53,10 @@ class ObjectHydrator
             if ($value === null && $type !== null && $type->isNullable() === false) {
                 continue;
             }
-            $this->propertyAccessor->setValue($object, $property, $value);
+            $this->propertyAccessor->setValue($targetObject, $property, $value);
         }
 
-        return $object;
+        return $targetObject;
     }
 
     private function getPropertyType(string $className, string $property): ?Type
