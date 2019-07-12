@@ -1,6 +1,5 @@
 {
 	"name": "bornfight/transfer-object-converter",
-	"version": "1.0.3",
 	"type": "symfony-bundle",
 	"license": "MIT",
 	"description": "Populate given object from POST request - both from $_POST and $_FILES",
