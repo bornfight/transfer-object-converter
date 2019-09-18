@@ -8,6 +8,12 @@ services:
     resource: '../../../src/*'
     exclude: '../../../src/{DependencyInjection,Transformers,Resources,Exceptions,TransferObjectConverterBundle.php}'
 
+  Bornfight\TransferObjectConverter\Factory\PropertyAccessorFactoryInterface:
+    class: Bornfight\TransferObjectConverter\Factory\PropertyAccessorFactory
+
+  Bornfight\TransferObjectConverter\Factory\PropertyInfoExtractorFactoryInterface:
+    class: Bornfight\TransferObjectConverter\Factory\PropertyInfoExtractorFactory
+
   Bornfight\TransferObjectConverter\TransferObjectConverter:
     class: Bornfight\TransferObjectConverter\TransferObjectConverter
     tags:

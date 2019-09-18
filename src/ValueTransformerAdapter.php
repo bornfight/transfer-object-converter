@@ -16,16 +16,24 @@ use Bornfight\TransferObjectConverter\Transformers\ValueTransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 use Throwable;
 
-class ValueTransformerAdapter
+final class ValueTransformerAdapter
 {
     /**
      * @var ValueTransformerInterface[]
      */
-    private $transformers = [];
+    private $transformers;
 
+    /**
+     * @param string[] $transformers
+     */
     public function __construct(array $transformers = [])
     {
-        $this->transformers = array_merge($transformers, $this->getDefaultTransformers());
+        $this->transformers = $this->createTransformers(
+            array_merge(
+                $transformers,
+                $this->getDefaultTransformers()
+            )
+        );
     }
 
     /**
@@ -39,12 +47,13 @@ class ValueTransformerAdapter
             return $value;
         }
         foreach ($this->transformers as $transformer) {
-            if ($transformer->supports($type) === true) {
-                try {
-                    return $transformer->transform($value, $type);
-                } catch (Throwable $ex) {
-                    return $value;
-                }
+            if ($transformer->supports($type) === false) {
+                continue;
+            }
+            try {
+                return $transformer->transform($value, $type);
+            } catch (Throwable $ex) {
+                return $value;
             }
         }
 
@@ -52,16 +61,31 @@ class ValueTransformerAdapter
         throw new TypeTransformNotSupportedException($message);
     }
 
+    /**
+     * @param string[] $transformerClassNames
+     *
+     * @return ValueTransformerInterface[]
+     */
+    private function createTransformers(array $transformerClassNames): array
+    {
+        $constructed = [];
+        foreach ($transformerClassNames as $className) {
+            $constructed[] = new $className();
+        }
+
+        return $constructed;
+    }
+
     private function getDefaultTransformers(): array
     {
         return [
-            new BooleanTransformer(),
-            new IntegerTransformer(),
-            new FloatTransformer(),
-            new StringTransformer(),
-            new ArrayTransformer(),
-            new ObjectTransformer(),
-            new ClassTransformer(),
+            BooleanTransformer::class,
+            IntegerTransformer::class,
+            FloatTransformer::class,
+            StringTransformer::class,
+            ArrayTransformer::class,
+            ObjectTransformer::class,
+            ClassTransformer::class,
         ];
     }
 }

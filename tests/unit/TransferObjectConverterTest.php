@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace Bornfight\TransferObjectConverter\Tests\unit;
 
+use Bornfight\TransferObjectConverter\Factory\PropertyAccessorFactory;
+use Bornfight\TransferObjectConverter\Factory\PropertyInfoExtractorFactory;
 use Bornfight\TransferObjectConverter\ObjectHydrator;
 use Bornfight\TransferObjectConverter\Tests\_support\TargetObjectTestClass;
 use Bornfight\TransferObjectConverter\TransferObjectConverter;
@@ -19,6 +21,9 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class TransferObjectConverterTest extends Unit
 {
     private const VALUE_INT = 1;
@@ -121,9 +126,13 @@ class TransferObjectConverterTest extends Unit
     private function getObjectHydrator(): ObjectHydrator
     {
         $valueTransformerAdapter = new ValueTransformerAdapter();
+        $propertyAccessorFactory = $this->createPropertyAccessorFactory();
+        $propertyInfoExtractorFactory = $this->createPropertyInfoExtractorFactory();
 
         return new ObjectHydrator(
-            $valueTransformerAdapter
+            $valueTransformerAdapter,
+            $propertyAccessorFactory,
+            $propertyInfoExtractorFactory
         );
     }
 
@@ -176,5 +185,15 @@ class TransferObjectConverterTest extends Unit
         $item->setString(self::VALUE_STRING);
 
         return $item;
+    }
+
+    private function createPropertyAccessorFactory(): PropertyAccessorFactory
+    {
+        return new PropertyAccessorFactory();
+    }
+
+    private function createPropertyInfoExtractorFactory(): PropertyInfoExtractorFactory
+    {
+        return new PropertyInfoExtractorFactory();
     }
 }

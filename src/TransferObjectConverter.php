@@ -14,7 +14,7 @@ class TransferObjectConverter implements ParamConverterInterface
 {
     public const NAME = 'bornfight.transfer_object_converter';
 
-    private const CONSTRAINT_VIOLAION_LIST_NAME = 'constraintViolationList';
+    private const CONSTRAINT_VIOLATION_LIST_NAME = 'constraintViolationList';
     private const TARGET_CLASS_NAME_EXCEPTION = 'It seems that argument (%s) which you want to populate has no class defined. This can happen if you set different argument name in @ParamConverter than it is named in method argument.';
     /**
      * @var ValidatorInterface|null
@@ -33,7 +33,7 @@ class TransferObjectConverter implements ParamConverterInterface
     public function __construct(
         ObjectHydrator $objectHydrator,
         ValidatorInterface $validator = null,
-        string $constraintViolationListName = self::CONSTRAINT_VIOLAION_LIST_NAME
+        string $constraintViolationListName = self::CONSTRAINT_VIOLATION_LIST_NAME
     ) {
         $this->objectHydrator = $objectHydrator;
         $this->validator = $validator;
