@@ -27,7 +27,7 @@
 		"codeception/verify": "^1.0",
 		"friendsofphp/php-cs-fixer": "^2.13",
 		"phpmd/phpmd": "@stable",
-		"phpstan/phpstan-shim": "^0.11.6",
+		"phpstan/phpstan-shim": "^0.12.0",
 		"phpstan/phpstan-strict-rules": "^0.11.0",
 		"sebastian/phpcpd": "^4"
 	},
