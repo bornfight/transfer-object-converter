@@ -1,0 +1,28 @@
+version: 2
+updates:
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "09:00"
+    timezone: Europe/Zagreb
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: friendsofphp/php-cs-fixer
+    versions:
+    - 2.18.2
+    - 2.18.3
+    - 2.18.4
+    - 2.18.5
+  - dependency-name: symfony/property-access
+    versions:
+    - 4.4.19
+  - dependency-name: symfony/property-info
+    versions:
+    - 4.4.19
+  - dependency-name: symfony/http-foundation
+    versions:
+    - 4.4.19
+  - dependency-name: phpmd/phpmd
+    versions:
+    - 2.9.1
